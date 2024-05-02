@@ -1,11 +1,14 @@
 #import <AVFoundation/AVFoundation.h>
 #import <AVKit/AVKit.h>
 #import <dlfcn.h>
+#import "YouTubeHeader/YTIModularPlayerBarModel.h"
 #import "YouTubeHeader/YTInlinePlayerBarView.h"
 #import "YouTubeHeader/YTMainAppControlsOverlayView.h"
 #import "YouTubeHeader/YTMainAppVideoPlayerOverlayViewController.h"
+#import "YouTubeHeader/YTModularPlayerBarController.h"
 #import "YouTubeHeader/YTRightNavigationButtons.h"
 #import "YouTubeHeader/YTPageStyleController.h"
+#import "YouTubeHeader/YTPlayerBarProtocol.h"
 #import "YouTubeHeader/YTPlayerView.h"
 #import "YouTubeHeader/YTPlayerViewController.h"
 #import "YouTubeHeader/YTPlayerBarSegmentMarkerView.h"
@@ -20,19 +23,19 @@
 #include <math.h>
 
 // prefs
-BOOL kIsEnabled;
-NSString *kUserID;
-NSString *kAPIInstance;
-NSDictionary *kCategorySettings;
-CGFloat kMinimumDuration;
-BOOL kShowSkipNotice;
-BOOL kShowButtonsInPlayer;
-BOOL kHideStartEndButtonInPlayer;
-BOOL kShowModifiedTime;
-BOOL kSkipAudioNotification;
-BOOL kEnableSkipCountTracking;
-CGFloat kSkipNoticeDuration;
-NSMutableArray <NSString *> *kWhitelistedChannels;
+extern BOOL kIsEnabled;
+extern NSString *kUserID;
+extern NSString *kAPIInstance;
+extern NSDictionary *kCategorySettings;
+extern CGFloat kMinimumDuration;
+extern BOOL kShowSkipNotice;
+extern BOOL kShowButtonsInPlayer;
+extern BOOL kHideStartEndButtonInPlayer;
+extern BOOL kShowModifiedTime;
+extern BOOL kSkipAudioNotification;
+extern BOOL kEnableSkipCountTracking;
+extern CGFloat kSkipNoticeDuration;
+extern NSMutableArray <NSString *> *kWhitelistedChannels;
 
 @interface YTPlayerViewController (iSB)
 @property (strong, nonatomic) NSMutableArray <SponsorSegment *> *skipSegments;
@@ -84,6 +87,13 @@ NSMutableArray <NSString *> *kWhitelistedChannels;
 @end
 
 @interface YTSegmentableInlinePlayerBarView (iSB)
+@property (strong, nonatomic) NSMutableArray *sponsorMarkerViews;
+@property (strong, nonatomic) NSMutableArray *skipSegments;
+- (void)removeSponsorMarkers;
+- (void)maybeCreateMarkerViewsISB;
+@end
+
+@interface YTModularPlayerBarView (iSB)
 @property (strong, nonatomic) NSMutableArray *sponsorMarkerViews;
 @property (strong, nonatomic) NSMutableArray *skipSegments;
 - (void)removeSponsorMarkers;
